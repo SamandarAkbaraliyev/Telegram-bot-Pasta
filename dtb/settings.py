@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 
     # local apps
     'users.apps.UsersConfig',
-    'product'
+    'product',
+    'order'
 ]
 
 MIDDLEWARE = [
@@ -181,4 +182,14 @@ TELEGRAM_LOGS_CHAT_ID = os.getenv("TELEGRAM_LOGS_CHAT_ID", default=None)
 #     # django.contrib.auth) you may enable sending PII data.
 #     send_default_pii=True
 # )
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "",
+    }
+}
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'media')
+MEDIA_URL = 'media/'
 

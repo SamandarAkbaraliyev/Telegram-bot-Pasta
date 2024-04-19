@@ -6,7 +6,7 @@ unlock_secret_room = "Congratulations! You've opened a secret room👁‍🗨. T
 github_button_text = "GitHub"
 secret_level_button_text = "Secret level🗝"
 
-MENU = "🍴 Menyu"
+CATEGORY_SELECT = "🍴 Menyu"
 BASKET = "📥 Savat"
 LOCATION = "KAFE LOKATSIYASI"
 ABOUT_ORDER = "🚀 Buyurtma haqida"
@@ -14,4 +14,4 @@ FEEDBACK = "✍️ Fikr bildirish"
 CONTACT = "☎️ Kontaktlar"
 SETTINGS = "⚙️ Sozlamalar"
 MAIN_MENU = "🏠 Bosh menu"
-
+BACK = "🔙 Ortga"

@@ -18,7 +18,7 @@ def make_keyboard_for_start_command() -> InlineKeyboardMarkup:
 def make_keyboard_for_start() -> ReplyKeyboardMarkup:
     buttons = [
         [
-            static_text.MENU,
+            static_text.CATEGORY_SELECT,
             static_text.BASKET
         ],
         [

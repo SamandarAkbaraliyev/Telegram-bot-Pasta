@@ -2,8 +2,7 @@ from telegram.update import Update
 from telegram.ext import CallbackContext, ConversationHandler
 from .keyboards import make_button_for_feedback
 from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start
-
-(FIKR_BILDIRISH,) = range(1)
+from tgbot.states import FIKR_BILDIRISH, MAIN_MENU_STATE
 
 
 def feedback(update: Update, context: CallbackContext) -> int:
@@ -19,4 +18,4 @@ def marking(update: Update, context: CallbackContext):
         """Bahoyingiz uchun raxmat""",
         reply_markup=make_keyboard_for_start()
     )
-    return ConversationHandler.END
+    return MAIN_MENU_STATE
