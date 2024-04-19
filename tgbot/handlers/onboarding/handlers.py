@@ -4,6 +4,7 @@ from django.utils import timezone
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
+import tgbot.states
 from tgbot.handlers.onboarding import static_text
 from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import User
@@ -23,8 +24,23 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
 
 def secret_level(update: Update, context: CallbackContext) -> None:
+    """
+    Processes the 'secret_level_button_text' callback after the /start command.
+
+    Parameters:
+    - update (Update): The incoming update from Telegram.
+    - context (CallbackContext): The current context object.
+
+    Returns:
+    - None: This function does not return any value.
+
+    Raises:
+    - None: This function does not raise any exceptions.
+
+    Usage:
+    - This function is called when a user presses the 'secret_level_button_text' after the /start command.
+    """
     # callback_data: SECRET_LEVEL_BUTTON variable from manage_data.py
-    """ Pressed 'secret_level_button_text' after /start command"""
     user_id = extract_user_data_from_update(update)['user_id']
     text = static_text.unlock_secret_room.format(
         user_count=User.objects.count(),
@@ -46,6 +62,7 @@ def start(update: Update, context: CallbackContext) -> int:
         f"CIAO {update.effective_user.first_name}! Kichik Italiyaga xush kelibsiz!\n\nNima buyurtma qilamiz?",
         reply_markup=make_keyboard_for_start()
     )
+    return tgbot.states.MAIN_MENU_STATE
 
 
 def contact(update: Update, context: CallbackContext) -> int:

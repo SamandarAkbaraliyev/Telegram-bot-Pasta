@@ -23,6 +23,7 @@ from tgbot.main import bot
 from tgbot.handlers.onboarding import static_text as onboarding_static_text
 from tgbot.handlers.basket.handlers import basket, about_order
 from tgbot.handlers.feedback.handlers import feedback, marking
+from tgbot import states
 
 
 def setup_dispatcher(dp):
@@ -30,7 +31,6 @@ def setup_dispatcher(dp):
     Adding handlers for events from Telegram
     """
     # onboarding
-    dp.add_handler(CommandHandler("start", onboarding_handlers.start))
     dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.CONTACT), onboarding_handlers.contact))
 
     # admin commands
@@ -55,12 +55,33 @@ def setup_dispatcher(dp):
         CallbackQueryHandler(broadcast_handlers.broadcast_decision_handler, pattern=f"^{CONFIRM_DECLINE_BROADCAST}")
     )
 
-    #
-    dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.BASKET), basket))
-    dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.ABOUT_ORDER), about_order))
-
+    conv_handler = ConversationHandler(
+        entry_points=[
+            CommandHandler('start', onboarding_handlers.start),
+        ],
+        states={
+            states.MAIN_MENU_STATE: [
+                MessageHandler(Filters.text(onboarding_static_text.FEEDBACK), feedback),
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
+                MessageHandler(Filters.text(onboarding_static_text.ABOUT_ORDER), about_order),
+                MessageHandler(Filters.text(onboarding_static_text.CONTACT), onboarding_handlers.contact),
+                MessageHandler(Filters.text(onboarding_static_text.CATEGORY_SELECT), menu_handlers.categories),
+                MessageHandler(Filters.text, onboarding_handlers.start)
+            ],
+            states.FIKR_BILDIRISH: [
+                MessageHandler(Filters.regex(
+                    '^(😊Hammasi yoqdi ❤️|☺️Yaxshi ⭐️⭐️⭐️⭐️|😐 Yoqmadi ⭐️⭐️⭐️|☹️ Yomon ⭐️⭐️|😤 Juda yomon👎🏻)$'), marking)
+            ],
+            states.CATEGORY_SELECT: [
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
+                MessageHandler(Filters.text(onboarding_static_text.BACK), onboarding_handlers.start),
+                # MessageHandler(Filters.text, ),
+            ],
+        },
+        fallbacks=[]
+    )
     # menu
-    dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.MENU), menu_handlers.menu))
+    # dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.MENU), menu_handlers.menu))
 
     # files
     dp.add_handler(MessageHandler(
@@ -70,19 +91,6 @@ def setup_dispatcher(dp):
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
 
-    conv_handler = ConversationHandler(
-        entry_points=[
-            CommandHandler('start', onboarding_handlers.start),
-            MessageHandler(Filters.text(onboarding_static_text.FEEDBACK), feedback)
-        ],
-        states={
-            FIKR_BILDIRISH: [
-                MessageHandler(Filters.regex(
-                    '^(😊Hammasi yoqdi ❤️|☺️Yaxshi ⭐️⭐️⭐️⭐️|😐 Yoqmadi ⭐️⭐️⭐️|☹️ Yomon ⭐️⭐️|😤 Juda yomon👎🏻)$'), marking)
-            ],
-        },
-        fallbacks=[]
-    )
     dp.add_handler(conv_handler)
 
     dp.add_handler(MessageHandler(Filters.text(onboarding_static_text.MAIN_MENU), onboarding_handlers.start))
