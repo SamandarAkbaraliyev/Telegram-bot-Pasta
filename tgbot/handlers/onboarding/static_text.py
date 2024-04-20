@@ -14,4 +14,6 @@ FEEDBACK = "✍️ Fikr bildirish"
 CONTACT = "☎️ Kontaktlar"
 SETTINGS = "⚙️ Sozlamalar"
 MAIN_MENU = "🏠 Bosh menu"
+CLEAR = '🔄 Tozalash'
+ORDER = '🚘 Buyurtma berish'
 BACK = "🔙 Ortga"
