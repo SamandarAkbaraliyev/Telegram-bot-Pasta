@@ -22,7 +22,7 @@ from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.main import bot
 from tgbot.handlers.order import handlers as order_handlers
 from tgbot.handlers.onboarding import static_text as onboarding_static_text
-from tgbot.handlers.basket.handlers import basket, about_order
+from tgbot.handlers.basket import handlers as basket_handlers
 from tgbot.handlers.feedback.handlers import feedback, marking
 from tgbot import states
 
@@ -64,8 +64,8 @@ def setup_dispatcher(dp):
         states={
             states.MAIN_MENU_STATE: [
                 MessageHandler(Filters.text(onboarding_static_text.FEEDBACK), feedback),
-                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
-                MessageHandler(Filters.text(onboarding_static_text.ABOUT_ORDER), about_order),
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket_handlers.basket),
+                MessageHandler(Filters.text(onboarding_static_text.ABOUT_ORDER), basket_handlers.about_order),
                 MessageHandler(Filters.text(onboarding_static_text.CONTACT), onboarding_handlers.contact),
                 MessageHandler(Filters.text(onboarding_static_text.CATEGORY_SELECT), menu_handlers.categories),
                 MessageHandler(Filters.text, onboarding_handlers.start)
@@ -75,23 +75,29 @@ def setup_dispatcher(dp):
                     '^(😊Hammasi yoqdi ❤️|☺️Yaxshi ⭐️⭐️⭐️⭐️|😐 Yoqmadi ⭐️⭐️⭐️|☹️ Yomon ⭐️⭐️|😤 Juda yomon👎🏻)$'), marking)
             ],
             states.CATEGORY_SELECT: [
-                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
                 MessageHandler(Filters.text(onboarding_static_text.BACK), onboarding_handlers.start),
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket_handlers.basket),
                 MessageHandler(Filters.text, menu_handlers.product_list),
             ],
             states.PRODUCT_SELECT: [
                 MessageHandler(Filters.text(onboarding_static_text.BACK), menu_handlers.categories),
-                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket_handlers.basket),
                 MessageHandler(Filters.text, menu_handlers.product_quantity_select),
             ],
             states.PRODUCT_SELECT_QUANTITY: [
                 MessageHandler(Filters.text(onboarding_static_text.BACK), menu_handlers.product_list),
-                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket),
+                MessageHandler(Filters.text(onboarding_static_text.BASKET), basket_handlers.basket),
                 MessageHandler(Filters.text, order_handlers.add_to_cart),
-            ]
+            ],
+            states.CART_STATE: [
+                MessageHandler(Filters.text(onboarding_static_text.CLEAR), basket_handlers.clear_cart),
+                MessageHandler(Filters.text(onboarding_static_text.MAIN_MENU), onboarding_handlers.start),
+                MessageHandler(Filters.text, basket_handlers.product_change),
+            ],
         },
         fallbacks=[
             CommandHandler('start', onboarding_handlers.start),
+            MessageHandler(Filters.text(onboarding_static_text.BASKET), basket_handlers.basket),
             # MessageHandler(Filters.text, onboarding_handlers.start),
         ]
     )
