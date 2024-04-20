@@ -4,9 +4,9 @@
 from telegram.ext import (
     Dispatcher, Filters,
     CommandHandler, MessageHandler,
-    CallbackQueryHandler, ConversationHandler
+    CallbackQueryHandler, ConversationHandler, PicklePersistence
 )
-
+import os
 from dtb.settings import DEBUG
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
@@ -92,6 +92,7 @@ def setup_dispatcher(dp):
             states.CART_STATE: [
                 MessageHandler(Filters.text(onboarding_static_text.CLEAR), basket_handlers.clear_cart),
                 MessageHandler(Filters.text(onboarding_static_text.MAIN_MENU), onboarding_handlers.start),
+                CallbackQueryHandler(basket_handlers.callback_product_change),
                 MessageHandler(Filters.text, basket_handlers.product_change),
             ],
         },
@@ -132,4 +133,8 @@ def setup_dispatcher(dp):
 
 
 n_workers = 0 if DEBUG else 4
-dispatcher = setup_dispatcher(Dispatcher(bot, update_queue=None, workers=n_workers, use_context=True))
+dispatcher = setup_dispatcher(
+    Dispatcher(bot, update_queue=None, workers=n_workers,
+               use_context=True,))
+               # persistence=PicklePersistence(filename=os.path.join('media','state_recorder', 'bot.pkl'), single_file=True))
+               #  )

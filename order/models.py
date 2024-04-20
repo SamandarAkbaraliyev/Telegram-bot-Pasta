@@ -36,3 +36,17 @@ class CartItem(models.Model):
     @property
     def subtotal(self):
         return self.quantity * self.product.price
+
+
+class Combo(models.Model):
+    title = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=11, decimal_places=2)
+
+
+class ComboOption(models.Model):
+    combo = models.ForeignKey(Combo, on_delete=models.CASCADE, related_name="options")
+    category = models.ForeignKey("product.Category", on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+
+Combo.objects.annotate(quantity=Sum("options__quantity"))
