@@ -49,4 +49,3 @@ class ComboOption(models.Model):
     quantity = models.PositiveIntegerField()
 
 
-Combo.objects.annotate(quantity=Sum("options__quantity"))
