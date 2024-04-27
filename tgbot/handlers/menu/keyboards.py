@@ -28,4 +28,4 @@ def make_keyboard_for_categories():
             buttons.append([categories_list[index].title])
     buttons.append([BACK, BASKET])
     return ReplyKeyboardMarkup(buttons, one_time_keyboard=False,
-                               input_field_placeholder='Quyidagilardan birini tanlang')
+                               input_field_placeholder='Quyidagilardan birini tanlang', resize_keyboard=True)
