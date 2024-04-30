@@ -28,6 +28,8 @@ if os.environ.get('DJANGO_DEBUG', default=False) in ['True', 'true', '1', True]:
 else:
     DEBUG = False
 
+DEBUG = False
+
 ALLOWED_HOSTS = ["*",]  # since Telegram uses a lot of IPs for webhooks
 
 
